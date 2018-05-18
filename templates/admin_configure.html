@@ -1,0 +1,143 @@
+{% extends "layout.html" %}
+
+{% block content_area %}
+  {% if session.username and logged_in %}
+    <!-- new stage section -->
+    {% if logged_in == 'admin' %}
+      <form class="form-upd-project" name="upd-project" method="POST">
+        <input type="hidden" name="project_id" value="{{project.id}}" />
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text" style="width: 300px;">Название проекта: </span>
+          </div>
+          <input type="text" name="project_upd_name" class="form-control" value="{{project.name}}" />
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text" style="width: 300px;">Описание проекта: </span>
+          </div>
+          <input type="text" name="project_upd_description" class="form-control" value="{{project.description}}" />
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text" style="width: 300px;">Репозиторий с Deploy-проектом:</span>
+          </div>
+          <input type="text" name="project_upd_giturl" class="form-control" value="{{project.git_url}}" />
+        </div>
+        
+        <div class="input-group mb-2">
+          <button class="btn btn-outline-primary" type="submit" disabled>Обновить информацию</button>
+        </div>
+      </form>
+      <hr>
+      <form class="form-upd-project" name="new_param" method="POST">
+        <input type="hidden" name="project_id" value="{{project.id}}" />
+        <div class="input-group mb-2">
+          <!-- выбор среды для параметра -->
+          <div class="input-group-prepend">
+            <select class="form-control custom-select" name="new_param_stage" size=1>
+              {% if stages %}
+                {% for st in stages %}
+                  {% set selected = '' %}
+                  {% if st.name == 'ALL' %}
+                  {% set selected = 'selected' %}
+                  {% endif %}
+                  <option value="{{st.name}}" {{selected}}>{{st.name}}</option>
+                {% endfor %}
+              {% endif %}
+            </select>
+          </div>
+          <!-- выбор типа переменной -->
+          <div class="input-group-prepend">
+            <select class="form-control custom-select" name="new_param_type" size=1>
+              <option value="" selected disabled>Тип</option>
+              <option value="project_id">Project ID</option>
+              <option value="token">Token доступа</option>
+              <option value="ref">Branch в Git (ref)</option>
+              <option value="variable">Переменная</option>
+              <option value="url">URL Prefix в GIT</option>
+            </select>
+          </div>
+          <!-- спросить пользователя или нет -->
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <input type="checkbox" name="new_param_askuser" data-toggle="tooltip" data-placement="bottom" title="Спрашивать значение каждый раз при запуске у пользователя."/>
+            </div>
+          </div>
+          <!-- значение переменной -->
+          <input type="text" name="new_param_name"  class="form-control" placeholder="Укажите название параметра" value="" />
+          <input type="text" name="new_param_value" class="form-control" placeholder="Укажите значение параметра, если надо" value="" />
+          <!-- кнопочка добавить -->
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary" type="submit">Добавить</button>
+          </div>
+
+        </div>
+      </form>
+
+      <hr>
+      {% if params %}
+      <h5>Параметры</h5>
+        <table class="table">
+        <thead>
+          <th scope="col">Среда</th>
+          <th scope="col">Тип</th>
+          <th scope="col">Название</th>
+          <th scope="col">Значение</th>
+          <th scope="col">Спросить?</th>
+          <th scope="col">DEL</th>
+        </thead>
+        {% for p in params %}
+
+        {% set color='info' %}
+
+        {% if p.stage.name.lower() == 'all' %}
+        {% set color='light' %}
+        {% endif %}
+
+        {% if p.stage.name.lower() == 'tst' %}
+        {% set color='primary' %}
+        {% endif %}
+
+        {% if p.stage.name.lower() == 'uat' %}
+        {% set color='warning' %}
+        {% endif %}
+
+        {% if p.stage.name.lower() == 'prod' %}
+        {% set color='danger' %}
+        {% endif %}
+
+        <tr class="table-{{color}}">
+          <td>{{p.stage.name}}</td>
+          <td>{{p.type}}</td>
+          <td>{{p.name}}</td>
+          <td>{{p.value}}</td>
+          <td>{{p.ask_user}}</td>
+          <td><form method="POST"><input type="hidden" name="remove_param_id" value="{{p.id}}" /><button type="submit" class="btn btn-sm btn-outline-danger">&times;</button></form></td> 
+        </tr>
+        {% endfor %}
+        </table>
+
+      {% endif %}
+
+      <h5>Советы</h5>
+      <hr>
+      <ul>
+        <li>ProjectID - номер проекта в GitLab, можно посмотреть в разделе CI/CD настроек.</li>
+        <li>Token доступа - необходимо сгенерировать в GitLab для возможности удаленного запуска.</li>
+        <li>Branch в Git - ветка проекта (master по-умолчанию), которую необходимо запустить.</li>
+        <li>URL Prefix в GIT - ссылка вида https://git.domain.local/api/v4/projects, параметр требуется при необходимости запуска задач с разных git-репозиториев.</li>
+        <li>Переменная. Переменная, которая будет передана в ANSIBLE. Обычно необходимо передать переменную STAGE, APP_VERSION, PROJECT.</li>
+        <li>Переменная. В качестве значения переменной можно задать список значений, разделенный ';' - в результате будет возможно выбрать любой из значений при запуске.</li>
+        <li>Переменная. Установив "галочку" при задании значения переменной - данное значение необходимо будет ввести при запуске. Обычно это используется для переменной APP_VERSION.</li>
+      </ul>
+
+    {% endif %}
+  {% else %}
+    <p>У Вас нет прав для просмотра данной страницы, обратитесь к DevOps'у</p>
+
+  {% endif %}
+
+  <div class="big-space"></div>
+
+{% endblock %}

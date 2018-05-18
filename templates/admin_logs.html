@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block content_area %}
+
+  {% if logged_in == 'admin' %}
+
+  {% if logs %}
+    <table class="table">
+      <thead><tr>
+        <th scope="col">Timestamp</th>
+        <th scope="col">Author</th>
+        <th scope="col">Action</th>
+        <th scope="col">Message</th>
+      </tr></thead>
+      <tbody>
+    {% for item in logs %}
+      <tr class='logs-row'>
+        <td class='logs-row-padding logs-col-timestamp'>{{item.timestamp.strftime("%Y-%m-%d %H:%M:%S")}}</td>
+        <td class='logs-row-padding logs-col-author'>{{item.author}}</td>
+        <td class='logs-row-padding logs-col-action'>{{item.action}}</td>
+        <td class='logs-row-padding logs-col-message'><pre class="duty-board-curl">{{item.message}}</pre></td>
+    {% endfor %}
+      </tbody>
+    </table>
+
+    <hr/>
+    {% if page_num %}
+
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        {% if page_num == 1 %}
+        <li class="page-item"><a class="page-link" href="/logs">{{page_num}}</a></li>
+        <li class="page-item"><a class="page-link" href="/logs/{{page_num+1}}">Next</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="/logs/{{page_num-1}}">Previous</a></li>
+        <li class="page-item"><a class="page-link" href="/logs/{{page_num}}">{{page_num}}</a></li>
+        <li class="page-item"><a class="page-link" href="/logs/{{page_num+1}}">Next</a></li>
+
+        {% endif %}
+        
+
+      </ul>
+    </nav>
+    <div clas='big-space'></div>
+
+    {% endif %}
+
+  {% else %}
+    <p>Нет истории действий.</p>
+
+    <hr/>
+    {% if page_num > 1 %}
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="/logs/{{page_num-1}}">Previous</a></li>
+      </ul>
+    </nav>
+
+    {% endif %}
+
+  {% endif %}
+  
+  {% else %}
+    <p>У Вас нет прав для просмотра данной страницы, обратитесь к DevOps'у</p>
+
+  {% endif %}
+
+
+  <div class="big-space"></div>
+
+{% endblock %}

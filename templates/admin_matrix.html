@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% block content_area %}
+  {% if session.username and logged_in %}
+    <!-- new stage section -->
+    {% if logged_in == 'admin' %}
+      <h3>Матрица доступа к проектам</h3>
+      <form class="form-upd-project" method="POST">
+        <div class="input-group mb-2">
+          <!-- выбор среды для параметра -->
+          <div class="input-group-prepend">
+            <select class="form-control custom-select" name="new_matrix_stage" size=1>
+              {% if stages %}
+                {% for st in stages %}
+                  {% set selected = '' %}
+                  {% if st.name == 'ALL' %}
+                  {% set selected = 'selected' %}
+                  {% endif %}
+                  <option value="{{st.id}}" {{selected}}>{{st.name}}</option>
+                {% endfor %}
+              {% endif %}
+            </select>
+          </div>
+          <!-- выбор пользователя-->
+          <div class="input-group-prepend">
+            <select class="form-control custom-select" name="new_matrix_user" size=1>
+              {% if users %}
+                {% for u in users %}
+                  <option value="{{u.id}}">{{u.name}}</option>
+                {% endfor %}
+              {% endif %}
+            </select>
+          </div>
+          <!-- выбор проекта -->
+          <div class="input-group-prepend">
+            <select class="form-control custom-select" name="new_matrix_project" size=1>
+              {% if projects %}
+                {% for pr in projects %}
+                  <option value="{{pr.id}}">{{pr.name}}</option>
+                {% endfor %}
+              {% endif %}
+            </select>
+          </div>
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary" type="submit">Дать доступ к проекту</button>
+          </div>
+
+        </div>
+      </form>
+      <hr>
+      {% if matrix %}
+      <h5>Ранее выданные права доступа к проектам</h5>
+        <table class="table">
+        <thead>
+          <th scope="col">Среда</th>
+          <th scope="col">Пользователь</th>
+          <th scope="col">Проект</th>
+          <th scope="col">DEL</th>
+        </thead>
+        {% for m in matrix %}
+
+        <tr class="table">
+          <td>{{m.stage.name}}</td>
+          <td>{{m.user.name}}</td>
+          <td>{{m.project.name}}</td>
+          <td><form method="POST"><input type="hidden" name="remove_matrix_id" value="{{m.id}}" /><button type="submit" class="btn btn-sm btn-outline-danger">&times;</button></form></td> 
+        </tr>
+        {% endfor %}
+        </table>
+
+      {% endif %}
+
+    {% endif %}
+  {% else %}
+    <p>У Вас нет прав для просмотра данной страницы, обратитесь к DevOps'у</p>
+
+  {% endif %}
+
+  <div class="big-space"></div>
+
+{% endblock %}

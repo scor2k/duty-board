@@ -1,0 +1,35 @@
+version: '2'
+services:
+  app:
+    image: 'registry.example.ru/duty-board:${DUTY_APP_TAG}'
+    container_name: duty_app
+    hostname: duty_app
+    restart: on-failure:3
+    ports:
+      - "9000:9000"
+    mem_limit: '${DUTY_APP_MEM}'
+    memswap_limit: '${DUTY_APP_MEM}'
+    environment:
+      # Database (PostgreSQL)
+      - DUTY_DB_NAME
+      - DUTY_DB_USER
+      - DUTY_DB_PASS
+      - DUTY_DB_PORT
+      - DUTY_DB_HOST
+      # LDAP
+      - DUTY_LDAP_SERVER
+      - DUTY_LDAP_PORT
+      - DUTY_LDAP_DOMAIN
+      - DUTY_LDAP_BASEDN
+      # Flask
+      - DUTY_FLASK_SECRET_KEY
+      - DUTY_FLASK_DEBUG
+      - DUTY_GITLAB_TOKEN
+      - DUTY_GITLAB_URL
+    logging:                                                                                                                                                                                                                              
+      driver: gelf                                                                                                                                                                                                                        
+      options:                                                                                                                                                                                                                            
+        gelf-address: '${GRAYLOG_URL}:${GRAYLOG_PORT}'                                                                                                                                                                                    
+        tag: '${GRAYLOG_FACILITY}'                                                                                                                                                                                                        
+
+

@@ -1,0 +1,12 @@
+*.j2
+*.md
+Dockerfile
+test.py
+.swp
+*.swp
+**/__pycache__/
+.git
+docker/
+src/
+test/
+*.sh

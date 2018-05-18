@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block content_area %}
+  {% if session.username and logged_in %}
+  <!-- new stage section -->
+  {% if logged_in == 'admin' %}
+  <form class="form-new-stage" method="POST">
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Новая среда исполнения:</span>
+      </div>
+      <input type="text" name="stage_new_name" class="form-control" />
+      <div class="input-group-append">
+        <button class="btn btn-outline-primary" type="submit">Добавить</button>
+      </div>
+    </div>
+    {% if msg %}
+    <div class="form-label-group">
+      <div class="alert alert-info">
+        <strong>{{ msg }}</strong>
+      </div>
+    </div>
+    {% endif %}
+  </form>
+  <hr>
+  {% endif %}
+
+  <h4>Существующие среды исполнения</h4>
+
+  {% if stages %}
+    {% for stg in stages %}
+    <div class="input-group mb-2">
+      <input type="text" name="stage_{{ stg.id }}" class="form-control" value="{{ stg.name }}" readonly />
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary disabled" type="button">Изменить</button>
+      </div>
+    </div>
+
+    {% endfor %}
+  {% else %}
+    <p>Еще не добавлено ни одной среды исполнения</p>
+  {% endif %}
+  
+  {% else %}
+    <p>У Вас нет прав для просмотра данной страницы, обратитесь к DevOps'у</p>
+
+  {% endif %}
+
+
+{% endblock %}

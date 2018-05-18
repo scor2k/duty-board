@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block content_area %}
+
+  {% if logged_in == 'admin' %}
+
+  {% if tasks %}
+    <table class="table">
+      <thead><tr>
+        <th scope="col">Timestamp</th>
+        <th scope="col">Author</th>
+        <th scope="col">Project</th>
+        <th scope="col">Stage</th>
+        <th scope="col">URL</th>
+      </tr></thead>
+      <tbody>
+    {% for item in tasks %}
+      <tr class='logs-row'>
+        <td class='logs-row-padding logs-col-timestamp'>{{item.timestamp.strftime("%Y-%m-%d %H:%M:%S")}}</td>
+        <td class='logs-row-padding logs-col-author'>{{item.author}}</td>
+        <td class='logs-row-padding logs-col-action'>{{item.project.name}}</td>
+        <td class='logs-row-padding logs-col-action'>{{item.stage.name}}</td>
+        <td class='logs-row-padding logs-col-message'><a href="{{item.job_url}}" target=_blank>{{item.job_url}}</a></td>
+    {% endfor %}
+      </tbody>
+    </table>
+
+    <hr/>
+    {% if page_num %}
+
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        {% if page_num == 1 %}
+        <li class="page-item"><a class="page-link" href="/tasks">{{page_num}}</a></li>
+        <li class="page-item"><a class="page-link" href="/tasks/{{page_num+1}}">Next</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="/tasks/{{page_num-1}}">Previous</a></li>
+        <li class="page-item"><a class="page-link" href="/tasks/{{page_num}}">{{page_num}}</a></li>
+        <li class="page-item"><a class="page-link" href="/tasks/{{page_num+1}}">Next</a></li>
+
+        {% endif %}
+        
+
+      </ul>
+    </nav>
+    <div clas='big-space'></div>
+
+    {% endif %}
+
+  {% else %}
+    <p>Нет истории запусков</p>
+
+    <hr/>
+    {% if page_num > 1 %}
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="/tasks/{{page_num-1}}">Previous</a></li>
+      </ul>
+    </nav>
+
+    {% endif %}
+
+  {% endif %}
+  
+  {% else %}
+    <p>У Вас нет прав для просмотра данной страницы, обратитесь к DevOps'у</p>
+
+  {% endif %}
+
+
+  <div class="big-space"></div>
+
+{% endblock %}

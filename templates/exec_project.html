@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block content_area %}
+  {% if session.username and logged_in %}
+      <hr>
+      {% if project %}
+      <h5>Описание проекта:</h5>
+      <form class="form-upd-project">
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text" style="width: 300px;">Название проекта: </span>
+          </div>
+          <input type="text" name="project_upd_name" class="form-control" value="{{project.name}}" readonly />
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text" style="width: 300px;">Описание проекта: </span>
+          </div>
+          <input type="text" name="project_upd_description" class="form-control" value="{{project.description}}" readonly />
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text" style="width: 300px;">Репозиторий с Deploy-проектом:</span>
+          </div>
+          <input type="text" name="project_upd_giturl" class="form-control" value="{{project.git_url}}" readonly />
+        </div>
+      </form>
+
+
+      {% endif %}
+
+      {% if params %}
+        <h5>Параметры запуска задачи: </h5>
+        <form class="form-exec-project" method="POST">
+          <input type="hidden" name="exec_project" value="{{project.id}}" />
+        {% for p in params %}
+
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              {% if p.type == 'variable' %}
+              {% set name = p.name %}
+              {% else %}
+              {% set name = p.type %}
+              {% endif %}
+              <span class="input-group-text" style="width: 200px;">{{name}}</span>
+            </div>
+
+            {% set is_readonly = 'readonly' %}
+            {% if p.ask_user == True %}
+            {% set is_readonly = '' %}
+            {% endif %}
+
+            {% set vvv = p.value %}
+            {% if logged_in == 'user' and p.type != 'variable' %}
+            {% set vvv = '**********' %}
+            {% endif %}
+
+            {% set list = vvv.split(';') %}
+            {% if list|length > 1 %}
+
+              <select name="{{p.name}}" class="custom-select" {{is_readonly}}>
+                {% for item in list %}
+                <option value="{{item}}">{{item}}</option>
+                {% endfor %}
+              </select>
+
+            {% else %}
+
+              <input type="text" name="{{p.name}}" class="form-control" value="{{vvv}}" {{is_readonly}} /> 
+
+            {% endif %}
+          </div>
+
+        {% endfor %}
+          <input type="submit" value="Запустить задачу" />
+        </form>
+
+      {% endif %}
+
+      {% if msg %}
+        <div class="form-label-group">
+          <div class="alert alert-info">
+            <strong>{{ msg }}</strong>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if jobs and project_id %}
+        <div class="form-label-group">
+          {% for job in jobs %}
+          <a href="/job/{{stage}}/{{project_id}}/{{job.id}}" class="btn btn-danger {{job.active}}" target=_blank />Job: {{job.name}} ID: {{job.id}}</a> &nbsp;
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if curl and logged_in == 'admin' %}
+        <h5>Строка для запуска с помощью curl:</h5>
+        <pre class="duty-board-curl">{{curl}}</pre> 
+      {% endif %}
+
+  {% else %}
+    <p>У Вас нет прав для просмотра данной страницы, обратитесь к DevOps'у</p>
+
+  {% endif %}
+
+  <div class="big-space"></div>
+
+{% endblock %}

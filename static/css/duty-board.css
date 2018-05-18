@@ -1,0 +1,77 @@
+a.nav-link {
+  color: #fff;
+}
+
+a.nav-link:hover {
+  color: #aaa;
+}
+
+main {
+  margin-top: 60px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  background-color: #343a40;
+}
+
+.text-footer {
+  color: #aaa;
+}
+
+.form-signin {
+  padding-top: 20px;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.form-label-group {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.big-space {
+  margin-bottom: 10rem;
+}
+
+.duty-board-curl {
+  color: #e83e8c !important;
+}
+
+pre {
+  color: #fff !important;
+}
+
+.logs-row {
+  font-size: 80%;
+  line-height: 130%;
+}
+
+.inspect-row-padding,
+.logs-row-padding {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+.logs-col-timestamp {
+  width: 150px;
+}
+
+.logs-col-author {
+  width: 130px;
+}
+
+.logs-col-action {
+  width: 200px;
+}
+
+.logs-col-message {
+  word-wrap: break-word;
+}
+
+

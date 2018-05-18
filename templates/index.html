@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content_area %}
+  <div class="row">
+    <div class="col-12">
+      <h2>Duty Board</h2>
+      <hr>
+      {% if msg %}
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Сообщение системы:</span>
+        </div>
+        <input type="text" readonly class="form-control" value="{{msg}}" />
+      </div>
+      {% endif %}
+
+
+    </div> <!-- /col-xs12 -->
+  </div> <!-- /row -->
+
+
+{% endblock %}

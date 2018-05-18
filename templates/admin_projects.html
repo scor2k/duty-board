@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block content_area %}
+  {% if session.username and logged_in %}
+  <!-- new stage section -->
+  {% if logged_in == 'admin' %}
+  <form class="form-new-project" method="POST">
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <span class="input-group-text" style="width: 400px;">Название нового проекта:</span>
+      </div>
+      <input type="text" name="project_new_name" class="form-control" />
+    </div>
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <span class="input-group-text" style="width: 400px;">Описание проекта:</span>
+      </div>
+      <input type="text" name="project_new_description" class="form-control" />
+    </div>
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <span class="input-group-text" style="width: 400px;">Ссылка на git-репозиторий с deploy-проектом:</span>
+      </div>
+      <input type="text" name="project_new_giturl" class="form-control" />
+    </div>
+    
+    <div class="input-group mb-2">
+      <button class="btn btn-outline-primary" type="submit">Добавить</button>
+    </div>
+
+
+
+    {% if msg %}
+    <div class="form-label-group">
+      <div class="alert alert-info">
+        <strong>{{ msg }}</strong>
+      </div>
+    </div>
+    {% endif %}
+  </form>
+  <hr>
+  {% endif %}
+
+  <h4>Существующие проекты</h4>
+
+  {% if projects %}
+    <div class="card-columns" style="column-count: 2;">
+    {% for prj in projects %}
+      <div class="card">
+        <div class="card-header">{{ prj.name }}</div>
+        <div class="card-body">
+          <p><i>{{ prj.description }}</i></p>
+          <a href="{{ prj.git_url }}" target=_blank>{{ prj.git_url }}</a>
+        </div>
+        <div class="card-footer text-muted text-right">
+          <a href="/admin/configure/{{prj.id}}" class="btn btn-outline-secondary">Настроить проект</a>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+  {% else %}
+    <p>Еще не добавлено ни одного проекта</p>
+  {% endif %}
+  
+  {% else %}
+    <p>У Вас нет прав для просмотра данной страницы, обратитесь к DevOps'у</p>
+
+  {% endif %}
+
+  <div class="big-space"></div>
+
+{% endblock %}

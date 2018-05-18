@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block content_area %}
+  {% if session.username and logged_in %}
+  <h4>Существующие проекты</h4>
+
+  {% if projects and allow %}
+    <!--
+    <pre style='font-size: 0px'>ALLOW_LIST: {{allow}}</pre>
+    <pre style='font-size: 0px'>LOGGED: {{logged_in}}</pre>
+    -->
+    <div class="card-columns" style="column-count: 2;">
+
+    {% if not stage %}
+    {% set stage = 'DEV' %}
+    {% endif %}
+
+    {% for prj in projects %}
+      {% set show = False %}
+      <!-- check users rights -->
+      {% if prj.id in allow %}
+      {% set show = True %}
+      {% endif %}
+      <!-- check user is admin -->
+
+      {% if logged_in == 'admin' %}
+      {% set show = True %}
+      {% endif %}
+
+      {% if show == True %}
+        <div class="card">
+          <div class="card-header">{{ prj.name }}</div>
+          <div class="card-body">
+            <p><i>{{ prj.description }}</i></p>
+            <a href="{{ prj.git_url }}" target=_blank>{{ prj.git_url }}</a>
+          </div>
+          <div class="card-footer text-muted text-right">
+            <a href="/exec/{{stage}}/{{prj.id}}" class="btn btn-outline-danger">Запустить</a>
+          </div>
+        </div>
+      {% endif %}
+
+    {% endfor %}
+    </div>
+  {% else %}
+    <p>Еще не добавлено ни одного проекта, либо, у Вас нет к ним доступа.</p>
+  {% endif %}
+  
+  {% else %}
+    <p>У Вас нет прав для просмотра данной страницы, обратитесь к DevOps'у</p>
+
+  {% endif %}
+
+  <div class="big-space"></div>
+
+{% endblock %}

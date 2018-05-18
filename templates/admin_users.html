@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content_area %}
+  {% if session.username and logged_in %}
+  <!-- new stage section -->
+  {% if logged_in == 'admin' %}
+  <h4>Ранее авторизованные пользователи</h4>
+
+  {% if users %}
+    {% for user in users %}
+    {% set is_admin = '' %}
+    {% if user.admin == True %}
+    {% set is_admin = 'checked' %}
+    {% endif %}
+    <form method="POST">
+    <div class="input-group mb-2">
+      <input type="text" name="user" class="form-control" value="{{ user.name }}" readonly />
+      <div class="input-group-append">
+        <div class="input-group-text">
+          <input type="checkbox" name="admin" aria-label="Is user admin?" {{ is_admin }} />
+        </div>
+      </div>
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="submit">Обновить</button>
+      </div>
+    </div>
+    </form>
+    {% endfor %} <!-- for user in users -->
+  {% else %}
+    <p>Странно, но пользователей почему-то нет. Наверно ошибка в роутах. </p>
+  {% endif %}
+  
+  {% else %} <!-- if logged_in == 'admin' -->
+    <p>У Вас нет прав для просмотра данной страницы, обратитесь к DevOps'у</p>
+
+  {% endif %} <!-- if logged_in == 'admin' -->
+  {% endif %} <!-- if session.username and logged_in -->
+
+{% endblock %}

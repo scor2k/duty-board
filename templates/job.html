@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block content_area %}
+  <div class="row">
+    <div class="col-12">
+      <h2>Job #{{job_id}}</h2>
+      {% set autorefresh_status = '' %}
+      {% if 'duty_job_autorefresh' in request.cookies %}
+        {% set autorefresh_status = 'checked' %}
+      {% endif %}
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" id="autorefresh_job" {{autorefresh_status}}>
+        <label class="custom-control-label" for="autorefresh_job">Автоматическое обновление страницы</label>
+      </div>
+      {% if job %}
+      <div class="duty-job">
+        {{job|safe}}
+      </div>
+      {% endif %}
+      <div class="big-space"> </div>
+
+    </div> <!-- /col-xs12 -->
+  </div> <!-- /row -->
+
+
+
+{% endblock %}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <title>Duty Board{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/duty-board.css', rnd='0.111121') }}" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon-256.png') }}">
+    <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+  </head>
+  <body>
+    <header class='d-print-none'>
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark box-shadow fixed-top">
+        <div class="container">
+          <a href="/" class="navbar-brand d-flex align-items-center">
+            {% if page %}
+            <strong>Duty Board {{page}}</strong>
+            {% else %}
+            <strong>Duty Board</strong>
+            {% endif %}
+          </a>
+          <div class="collapse navbar-collapse justify-content-end" id="navbar-main-menu">
+            <ul class="nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/">Главная</a>
+              </li>
+              {% if session.username and logged_in %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="menu-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="bottom" title="Выберите среду выполнения">
+                  Среда выполнения
+                </a>
+                <div class="dropdown-menu bg-dark" aria-labelledby="menu-dropdown">
+                  {% for st in stages %}
+                    {% if st.name != 'ALL' %}
+                  <a class="dropdown-item nav-link" href="/exec/{{st.name}}">Перейти в : {{st.name}}</a>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </li>
+              {% if logged_in == 'admin' %}
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="menu-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="bottom" title="Административный раздел">
+                    Администрирование
+                  </a>
+                  <div class="dropdown-menu bg-dark" aria-labelledby="menu-dropdown">
+                    <a class="dropdown-item nav-link" href="{{url_for('admin.projects')}}">Проекты</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item nav-link" href="{{url_for('logs.logs')}}">Журнал действий</a>
+                    <a class="dropdown-item nav-link" href="{{url_for('tasks.tasks')}}">История запуска задач</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item nav-link" href="{{url_for('admin.stages')}}">Среды выполнения</a>
+                    <a class="dropdown-item nav-link" href="{{url_for('admin.users')}}">Список пользователей</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item nav-link" href="{{url_for('admin.matrix')}}">Матрица доступа</a>
+                  </div>
+                </li>
+              {% endif %}
+
+              <li class="nav-item active">
+                <a class="nav-link" href="/logout" data-toggle="tooltip" data-placement="bottom" title="Выход из системы">
+                  </span>&nbsp;[ {{ session.username }} ]
+                </a>
+              </li>
+
+              {% endif %}
+            </ul>
+          </div>
+        </div> <!-- /container -->
+      </nav>
+    </header>
+
+    <main role="main">
+      <div class="container">
+        {% block content_area %} {% endblock %}
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <span class="text-footer">&copy; Design by Alexander Konyukov. Version: {{ __version__ }}</span>
+      </div>
+    </footer>
+    {% if session.sid %}
+    <input type="hidden" id="duty_sid" value="{{ session.sid }}" />
+    {% endif %}
+
+  </body>
+
+  <script src="{{ url_for('static', filename='js/popper.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/duty-board.js', ver=__version__) }}"></script>
+
+</html>

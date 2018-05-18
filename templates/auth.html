@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block content_area %}
+  <form class="form-signin" method="POST">
+    <div class="text-center mb-4">
+      <img class="mb-4" style="width: 100%;" src="{{ url_for('static', filename='img/logo.png') }}" />
+    </div>
+    <div class="form-label-group">
+      <input type="text" name="user_login" class="form-control" placeholder="Domain username" required autofocus />
+    </div>
+    <div class="form-label-group">
+      <input type="password" name="user_password" class="form-control" placeholder="Domain password" required />
+    </div>
+
+    <button class="btn btn-lg btn-outline-primary btn-block" type="submit">Авторизоваться</button> 
+    {% if auth %}
+    <div class="form-label-group">
+    {% if auth.state == True %}
+      <div class="alert alert-success">
+    {% else  %}
+      <div class="alert alert-danger">
+    {% endif %}
+        <strong>{{ auth.msg }}</strong>
+      </div>
+    </div>
+    {% endif %}
+
+
+  </form>
+
+
+{% endblock %}
