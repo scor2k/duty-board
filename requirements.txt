@@ -1,5 +1,5 @@
 gunicorn==19.7.1
-requests==2.18.4
+requests==2.20.0
 flask==0.12.2
 peewee==3.0.17
 psycopg2-binary==2.7.4
